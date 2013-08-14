@@ -15,7 +15,7 @@ var respondGetMessage = function (response) {
     response.send(messages[id]);
   } else {
     // TODO: check if user is out
-    setTimeout(function() { respondGetMessage(response); }, 1000);
+    setTimeout(function() { respondGetMessage(response); }, 1);
   }
 };
 

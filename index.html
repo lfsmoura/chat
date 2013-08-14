@@ -50,6 +50,9 @@
         height: 500px;
         width: 100%;
       }
+      .visible {
+        visibility: hidden;
+      }
     </style>
   </head>
   <body>
@@ -73,11 +76,20 @@
     </footer>
 
     <script type="text/javascript">
+         var deactivate = function() {
+          $('#send').attr("disabled", "true");
+         };
+        
+         var activate = function() {
+          $('#send').attr("disabled", "false");
+         };
          newRequest = function(id) {
             $.ajax({
               url : "/message/" + id,
               cache: false,
               success : function(result) {
+                $('#sendform').toggleClass('visible');
+                activate();
                 $('#messages').prepend(result + "<hr>");
                 newRequest(id+1);
                 },
@@ -90,12 +102,15 @@
           newRequest(0);
           var sendMsg = function() {
               var value = $("#msg").val();
+              $("#msg").val("");
               $.ajax({
                 url : "/send",
                 cache: false,
                 type: 'POST',
                 data: value,
                 success : function(result){
+                $('#sendform').toggleClass("visible");
+                deactivate();
                 //$('#more-numbers').append("<div class=\"well well-small\">" + result + "</div>");
                           }
                           });
