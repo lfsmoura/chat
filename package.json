@@ -1,5 +1,7 @@
 {
   "name": "node-example",
+  "description": "chat used in order to learn backbone.js",
+  "private": true,
   "version": "0.0.1",
   "dependencies": {
     "utils-merge": "x",
