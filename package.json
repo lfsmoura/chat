@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "utils-merge": "x",
+    "application": "x",
     "express": "4.0.x",
     "body-parser": "x"
   },
