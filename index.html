@@ -2,130 +2,26 @@
 <html>
   <head>
     <title>Chat</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <style type="text/css">
-      html,
-      body {
-        height: 100%;
-        /* The html and body elements cannot have any padding or margin. */
-      }
-
-      /* Wrapper for page content to push down footer */
-      #wrap {
-        min-height: 100%;
-        height: auto !important;
-        height: 100%;
-        /* Negative indent footer by its height */
-        margin: 0 auto -40px;
-        /* Pad bottom by footer height */
-        padding: 0 0 40px;
-      }
-      footer {
-        text-align: center;
-        height: 40px;
-        margin-top:10px;
-        background-color: #000;
-        color: #fff;
-      }
-      input {
-        width: 100px;
-      }
-      #qtd {
-        width:100px;
-      }
-      .container {
-        padding:5px;
-      }
-      .well-small {
-        position: relative;
-        width: 200px;
-        float: left;
-        margin: 10px;
-        }
-      #messages {
-        overflow: scroll;
-        height: 500px;
-        width: 100%;
-      }
-      .visible {
-        visibility: hidden;
-      }
-    </style>
+    
+    <link rel="stylesheet" href="css/base.css">
   </head>
   <body>
-    <div id="wrap">
-      <h1>Deixe sua mensagem de amor e amizade</h1>
-      <div id="messages" class="well well-large">
+    <div id="chat">
+      <div id="room">
       </div>
-      <div class="container">
-        <form id="sendform" class="form-inline">
-          <input type="text" id="msg" class="form-control">
-          <button id="send" type="button" class="btn btn-default">Enviar</button> 
-        </form>
-      </div>
-      <div id="more-numbers">
-      </div>
+      <input id="user" value="anonymous" maxlength="15">
+      <input id="new-message" placeholder="type your message and press enter" autofocus>
     </div>
-    <footer>
-      <div class="container">
-        <small>O chat amor e amizade é mais um empreendimento Moura Investimentos</small>
-      </div>
-    </footer>
 
-    <script type="text/javascript">
-         var deactivate = function() {
-          $('#send').attr("disabled", "true");
-         };
-        
-         var activate = function() {
-          $('#send').attr("disabled", "false");
-         };
-         newRequest = function(id) {
-            $.ajax({
-              url : "/message/" + id,
-              cache: false,
-              success : function(result) {
-                $('#sendform').toggleClass('visible');
-                activate();
-                $('#messages').prepend(result + "<hr>");
-                newRequest(id+1);
-                },
-              error : function(xhr, status, error) {
-                //alert("got error");
-                newRequest(id);
-              }
-            });
-          };
-          newRequest(0);
-          var sendMsg = function() {
-              var value = $("#msg").val();
-              $("#msg").val("");
-              $.ajax({
-                url : "/send",
-                cache: false,
-                type: 'POST',
-                data: value,
-                success : function(result){
-                $('#sendform').toggleClass("visible");
-                deactivate();
-                //$('#more-numbers').append("<div class=\"well well-small\">" + result + "</div>");
-                          }
-                          });
-              return false;
-          };
-              $("#send").click(sendMsg);
-              $("#sendform").submit(sendMsg);
-        </script>
-    <!-- JavaScript plugins (requires jQuery) -->
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <script type="text/template" id="message-template">
+      <span class="user"><%= user %>:</span> <%= message %>
+    </script>
+    <script src="js/lib/jquery-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
 
-    <!-- Optionally enable responsive features in IE8 -->
-    <!-- <script src="js/respond.js"></script> -->
-
+    <script src="js/message.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/view.js"></script>
   </body>
 </html>
