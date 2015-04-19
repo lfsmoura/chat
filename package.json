@@ -2,6 +2,7 @@
   "name": "node-example",
   "version": "0.0.1",
   "dependencies": {
+    "utils-merge": "x",
     "express": "4.0.x",
     "body-parser": "x"
   },
