@@ -19,6 +19,10 @@ var respondGetMessage = function (response) {
   }
 };
 
+var stripHtml = function(s) {
+  return s.replace(/<\/?[^>]+(>|$)/g, "");
+}
+
 app.get('/messages', function(request, response) {
   console.log("user asked all messages");
   var count = 0;
@@ -33,7 +37,7 @@ app.get('/messages', function(request, response) {
 
 app.post('/messages', function(request, response) {
   console.log('request sent' + request.body.message);
-  fs.appendFile('chat.txt', "\n" + request.body.user + "§" + request.body.message);
+  fs.appendFile('chat.txt', "\n" + request.body.user + "§" + stripHtml(request.body.message));
 });
 
 app.get('/', function(request, response) {
@@ -49,16 +53,6 @@ app.get('/messages/:last_fetch', function(request, response) {
       console.log('out of sync');
   })*/
 });
-
-/*
-app.post('/send', function(request, response) {
-  console.log('send');
-  request.on('data', function(chunk) { 
-    console.log(chunk.toString());
-    fs.appendFile('chat.txt', chunk.toString().replace(/<(?:.|\n)*?>/gm, '') + '\n');
-  });
-  response.send("ok");
-});*/
 
 app.listen(app.get('port'), function() {
     console.log("Node app is running at localhost:" + app.get('port'));
