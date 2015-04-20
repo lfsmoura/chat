@@ -43,7 +43,8 @@ chat.ChatView = Backbone.View.extend({
   addAll: function() {
     this.$room.html(''); // clear placeholder message
     chat.Chat.each(this.addOne, this);
-    this.$room.animate({ scrollTop: 1000 }, 1000);
+    if (this.autoScrollActivated())
+      this.$room.animate({ scrollTop: chat.Chat.length * 30 }, 1000);
   },
 
   render: function() {
@@ -53,6 +54,10 @@ chat.ChatView = Backbone.View.extend({
 
   getInputMessage: function() {
     return { user: this.$user.val().trim(), message: this.$message.val().trim() };
+  },
+
+  autoScrollActivated: function() {
+    return this.$('#auto-scroll').is(':checked');
   },
 
   sendOnEnter: function(event) {

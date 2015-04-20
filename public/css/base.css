@@ -1,23 +1,23 @@
 #room {
-  width:  80%;
   height: 400px;
   border: 1px solid #ccc;
   padding: 10px;
   margin: 10px;
   overflow: auto;
+  background-color: #eee;
 }
 
-input {
+#input-box {
   margin: 10px;
 }
 
-input:disabled {
-  background-color: #bbbbbb;
-  color: #666;
+.footer {
+  margin-top: 20%;
+  border-top: 1px solid #ccc;
 }
 
 .user {
   float:left;
   width: 130px;
-  color: #999;
+  color: #bbb;
 }
