@@ -2,11 +2,15 @@
   "name": "node-example",
   "description": "chat used in order to learn backbone.js",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "main": "web.js",
+  "scripts": {
+    "start": "node web.js"
+  },
   "dependencies": {
     "utils-merge": "x",
     "application": "x",
-    "express": "4.0.x",
+    "express": "4.x",
     "body-parser": "x"
   },
   "engines": {

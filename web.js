@@ -1,16 +1,13 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var app = express();
-app.use(express.static(__dirname));
-
-var bodyParser = require('body-parser');
 app.use(bodyParser.json());
-
-var fs = require('fs');
-var sys = require('sys');
-var exec = require('child_process').exec;
-
-var lastModDate = 0;
+app.set('port', (process.env.PORT || 5000));
+app.use(express.static(__dirname + '/public'));
+//app.use(express.static('js'));
+app.use(express.static(__dirname + '/css'));
 
 var respondGetMessage = function (response) {
   var messages = fs.readFileSync('chat.txt', 'utf-8').split('\n');
@@ -21,8 +18,6 @@ var respondGetMessage = function (response) {
     setTimeout(function() { respondGetMessage(response); }, 1);
   }
 };
-
-app.use(express.static('js'));
 
 app.get('/messages', function(request, response) {
   console.log("user asked all messages");
@@ -65,8 +60,6 @@ app.post('/send', function(request, response) {
   response.send("ok");
 });*/
 
-
-var port = process.env.PORT || 8080;
-app.listen(port, function() {
-  console.log("Listening on " + port);
+app.listen(app.get('port'), function() {
+    console.log("Node app is running at localhost:" + app.get('port'));
 });

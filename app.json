@@ -1,0 +1,6 @@
+{
+  "name": "chat with backbone",
+  "description": "A backbone.js Node.js app using Express 4",
+  "repository": "https://bitbucket.com/lfsmoura/chat.git",
+  "keywords": ["node", "express", "static", "backbone"]
+}
