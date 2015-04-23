@@ -35,7 +35,7 @@ var insertMessage = function(msg) {
       }
 
       // SQL Query > Insert Data
-      client.query('INSERT INTO messages("user", message, date) values($1, $2, $3)', [msg.user, msg.message, new Date().getTime()]);
+      client.query('INSERT INTO messages("user", message, date) values($1, $2, $3)', [msg.user, msg.message, msg.date]);
 
   });
 }
@@ -63,6 +63,7 @@ app.get('/messages', function(request, response) {
 app.post('/messages', function(request, response) {
   console.log('request sent' + request.body.message);
   insertMessage(request.body);
+  response.sendStatus(200);
 });
 
 app.get('/', function(request, response) {

@@ -4,6 +4,8 @@ chat.Message = Backbone.Model.extend({
 
   defaults: {
     user: '',
-    message: ''
+    message: '',
+    // TODO change date to userId
+    date: 0
   },
 });

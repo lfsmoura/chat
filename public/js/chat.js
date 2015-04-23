@@ -7,9 +7,6 @@ var Chat = Backbone.Collection.extend({
   },
 
   url: '/messages/'
-  //url: function() {
-  //  return '/messages/' + new Date().getTime();
-  //}
 });
 
 chat.Chat = new Chat();
