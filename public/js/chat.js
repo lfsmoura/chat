@@ -6,7 +6,11 @@ var Chat = Backbone.Collection.extend({
   initialize: function() {
   },
 
-  url: '/messages/'
+  url: function() {
+    console.log("get url "+ this.length);
+    var last_id = (this.last() && this.last().get('id')) ? this.last().get('id') : '0';
+    return '/messages/' + last_id;
+  }
 });
 
 chat.Chat = new Chat();

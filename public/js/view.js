@@ -11,6 +11,7 @@ chat.MessageView = Backbone.View.extend({
 
   render: function() {
     this.$el.html( this.template( this.model.attributes ) );
+    this.$el.fadeIn();
     return this;
   }
 });
@@ -23,7 +24,7 @@ chat.ChatView = Backbone.View.extend({
   },
 
   initialize: function() {
-    setInterval(function() { chat.Chat.fetch(); }, 5000);
+    setInterval(function() { chat.Chat.fetch({remove:false}); }, 5000);
 
     this.$room    = this.$('#room');
     this.$user    = this.$('#user');
@@ -31,15 +32,14 @@ chat.ChatView = Backbone.View.extend({
 
     this.listenTo(chat.Chat, 'add', this.addJustOne);
     this.listenTo(chat.Chat, 'reset', this.addAll);
-    this.listenTo(chat.Chat, 'change', function() { console.log("ok britto"); });
    
     chat.Chat.fetch({reset:true});
   },
 
   addJustOne: function(msg) {
     if (!msg.isNew()) {
-      if (msg.get('date') != chat.userId)
-        chat.notify(msg.get('user') + ":",msg.get('message'));  
+      if (msg.get('user_id') != chat.userId)
+        chat.notify(msg.get('username') + ":", msg.get('message'));  
       this.addOne(msg);
     }
   },
@@ -64,7 +64,7 @@ chat.ChatView = Backbone.View.extend({
   },
 
   getInputMessage: function() {
-    return { user: this.$user.val().trim(), message: this.$message.val().trim(), date:chat.userId };
+    return { username: this.$user.val().trim(), message: this.$message.val().trim(), user_id: chat.userId };
   },
 
   autoScrollActivated: function() {

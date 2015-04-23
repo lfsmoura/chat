@@ -26,8 +26,10 @@ var stripHtml = function(s) {
   return s.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
-var insertMessage = function(msg) {
-// Get a Postgres client from the connection pool
+
+app.post('/messages/:last_id', function(request, response) {
+  console.log('request sent' + request.body.message);
+  var msg = request.body;
   pg.connect(connectionString, function(err, client, done) {
       // Handle Errors
       if(err) {
@@ -35,44 +37,37 @@ var insertMessage = function(msg) {
       }
 
       // SQL Query > Insert Data
-      client.query('INSERT INTO messages("user", message, date) values($1, $2, $3)', [msg.user, msg.message, msg.date]);
-
+      client.query('INSERT INTO messages(username, user_id, message, date) values($1, $2, $3, $4)', [msg.username, msg.user_id, msg.message, new Date().getTime()]).on('end', function() {
+        response.sendStatus(200);
+      });
   });
-}
-
-app.get('/messages', function(request, response) {
-  console.log("user asked all messages");
-  pg.connect(connectionString, function(err, client, done) {
-    var messages = [];
-    var query = client.query("SELECT * FROM messages ORDER BY date ASC");
-    query.on('row', function(row) {
-      messages.push(row);
-    });
-
-    query.on('end', function() {
-      client.end();
-      response.send(messages);
-    });
-
-    if(err) {
-      console.log(err);
-    }
-  });
-});
-
-app.post('/messages', function(request, response) {
-  console.log('request sent' + request.body.message);
-  insertMessage(request.body);
-  response.sendStatus(200);
 });
 
 app.get('/', function(request, response) {
   response.send(fs.readFileSync('index.html').toString());
 });
 
-app.get('/messages/:last_fetch', function(request, response) {
-  last_fetch = request.params.last_fetch;
-  console.log("user asked for a message " + last_fetch);
+app.get('/messages/:last_id', function(request, response) {
+  var last_id = request.params.last_id;
+  console.log("user asked for a message " + last_id);
+  pg.connect(connectionString, function(err, client, done) {
+    if(err)
+      console.log(err);
+
+    var messages = [];
+    var query = client.query('SELECT * FROM messages WHERE id > $1 ORDER BY date ASC', [last_id]);
+    query.on('row', function(row) {
+      messages.push(row);
+    });
+
+    query.on('end', function() {
+      client.end();
+      if (messages.length > 0)
+        response.send(messages);
+      else
+        response.sendStatus(304);
+    });
+  });
 });
 
 app.listen(app.get('port'), function() {
