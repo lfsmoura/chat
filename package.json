@@ -11,7 +11,9 @@
     "utils-merge": "x",
     "application": "x",
     "express": "~4.9.x",
-    "body-parser": "x"
+    "body-parser": "x",
+    "express-generator": "4",
+    "pg": ""
   },
   "engines": {
     "node": "0.12.x",
