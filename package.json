@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "main": "web.js",
   "scripts": {
-    "start": "node web.js"
+    "start": "node database.js; node web.js"
   },
   "dependencies": {
     "utils-merge": "x",
