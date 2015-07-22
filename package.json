@@ -1,5 +1,5 @@
 {
-  "name": "node-example",
+  "name": "chat super cool",
   "description": "chat used in order to learn backbone.js",
   "private": true,
   "version": "0.1.0",
@@ -18,5 +18,9 @@
   "engines": {
     "node": "0.12.x",
     "npm": "2.8.x"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "uglifyjs": "^2.4.10"
   }
 }

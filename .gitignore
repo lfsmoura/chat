@@ -3,3 +3,5 @@ chat.txt
 node_modules/
 
 *.swp
+
+.idea
