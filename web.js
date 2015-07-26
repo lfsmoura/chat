@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 var pg = require('pg');
 
 var app = express();
@@ -19,7 +20,7 @@ app.get('/', function(request, response) {
 });
 
 app.post('/messages/:last_id', function(request, response) {
-  console.log('request sent' + request.body.message);
+  console.log('request sent ' + request.body.message);
   var msg = request.body;
   pg.connect(connectionString, function(err, client, done) {
       // Handle Errors
