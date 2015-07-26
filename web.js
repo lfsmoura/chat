@@ -14,7 +14,6 @@ var stripHtml = function(s) {
   return s.replace(/<\/?[^>]+(>|$)/g, "");
 };
 
-
 app.get('/', function(request, response) {
   response.send(fs.readFileSync('index.html').toString());
 });
@@ -26,6 +25,7 @@ app.post('/messages/:last_id', function(request, response) {
       // Handle Errors
       if(err) {
         console.log(err);
+        done();
         return response.sendStatus(401);
       }
 
