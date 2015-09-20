@@ -1,4 +1,4 @@
-define(['chat','message'], function(Chat, Message) {
+define(['chat', 'message', 'i18n!nls/main'], function(Chat, Message, lang) {
 
     var MessageView = Backbone.View.extend({
         tagname: 'p',
@@ -36,12 +36,9 @@ define(['chat','message'], function(Chat, Message) {
             'keypress #new-message': 'sendOnEnter'
         },
 
+        template: _.template($('#chat-template').html()),
+
         initialize: function () {
-
-            this.$room = this.$('#room');
-            this.$user = this.$('#user');
-            this.$message = this.$('#new-message');
-
             this.createdAt = new Date().getTime();
             this.userId = new Date().getTime();
             this.chat = new Chat();
@@ -66,6 +63,11 @@ define(['chat','message'], function(Chat, Message) {
         },
 
         render: function () {
+            console.log(this.$el);
+            this.$el.html(this.template(lang));
+            this.$room = this.$('#room');
+            this.$user = this.$('#user');
+            this.$message = this.$('#new-message');
             // clear placeholder message
             this.$room.html('');
             this.chat.each(this.addNoNotification, this);
