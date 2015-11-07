@@ -8,12 +8,14 @@
     "start": "node web.js"
   },
   "dependencies": {
-    "utils-merge": "x",
     "application": "x",
-    "express": "~4.9.x",
     "body-parser": "x",
+    "express": "~4.9.x",
     "express-generator": "4",
-    "pg": ""
+    "pg": "",
+    "randomcolor": "^0.4.2",
+    "react": "^0.14.1",
+    "utils-merge": "x"
   },
   "engines": {
     "node": "0.12.x",

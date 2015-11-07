@@ -1,12 +1,19 @@
-define(['chat', 'message', 'i18n!nls/main'], function(Chat, Message, lang) {
+define(['lib/randomColor', 'chat', 'message', 'i18n!nls/main'],
+        function(randomColor, Chat, Message, lang) {
 
+          console.log(randomColor);
     var MessageView = Backbone.View.extend({
         tagname: 'p',
 
         template: _.template($('#message-template').html()),
 
         render: function () {
-            this.$el.html(this.template(this.model.attributes));
+            console.log(this.model.get('user_id'));
+            var attr = { color: randomColor({
+              seed: parseInt(this.model.get('user_id')),
+              luminosity: 'bright'
+            }) };
+            this.$el.html(this.template(_.extend(attr ,this.model.attributes)));
             this.$el.fadeIn();
             return this;
         }
@@ -63,7 +70,6 @@ define(['chat', 'message', 'i18n!nls/main'], function(Chat, Message, lang) {
         },
 
         render: function () {
-            console.log(this.$el);
             this.$el.html(this.template(lang));
             this.$room = this.$('#room');
             this.$user = this.$('#user');
