@@ -8,6 +8,9 @@ app.use(bodyParser.json());
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/chat';
 
 var stripHtml = function(s) {
@@ -21,6 +24,7 @@ app.get('/', function(request, response) {
 app.post('/messages/:last_id', function(request, response) {
   console.log('request sent ' + request.body.message);
   var msg = request.body;
+  
   pg.connect(connectionString, function(err, client, done) {
       // Handle Errors
       if(err) {
@@ -30,11 +34,14 @@ app.post('/messages/:last_id', function(request, response) {
       }
 
       // SQL Query > Insert Data
-      client.query('INSERT INTO messages(username, user_id, message, date) values($1, $2, $3, $4)', [msg.username, msg.user_id, msg.message, new Date().getTime()]).on('end', function() {
-        response.sendStatus(200);
+      var query = client.query('INSERT INTO messages(username, user_id, message, date) values($1, $2, $3, $4) RETURNING *', [msg.username, msg.user_id, msg.message, new Date().getTime()], function(err, result) {
+        io.emit('message', result.rows[0]);
       });
-
-      done();
+    
+      query.on('end', function() {
+        response.sendStatus(200);
+        done();
+      });
   });
 });
 
@@ -65,6 +72,7 @@ app.get('/messages/:last_id', function(request, response) {
   });
 });
 
-app.listen(app.get('port'), function() {
+
+http.listen(app.get('port'), function() {
     console.log("Node app is running at localhost:" + app.get('port'));
 });
