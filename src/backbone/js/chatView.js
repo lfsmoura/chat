@@ -1,14 +1,11 @@
 define(['lib/randomColor', 'chat', 'message', 'i18n!nls/main'],
         function(randomColor, Chat, Message, lang) {
-
-          console.log(randomColor);
     var MessageView = Backbone.View.extend({
         tagname: 'p',
 
         template: _.template($('#message-template').html()),
 
         render: function () {
-            console.log(this.model.get('user_id'));
             var attr = { color: randomColor({
               seed: parseInt(this.model.get('user_id')),
               luminosity: 'bright'
