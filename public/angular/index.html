@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../backbone/css/base.css">
     <link href="../backbone/css/bootstrap.min.css" rel="stylesheet">
 
-    <script src="js/lib/jquery-2.1.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="js/lib/angular.min.js"></script>
     <script src="js/lib/angular-resource.min.js"></script>
@@ -27,12 +26,14 @@
     <div id="input-box">
         <form ng-submit="chat.sendMsg()">
             <label>
-                <input type="checkbox" id="auto-scroll" checked="checked"> auto-scroll
+                <input type="checkbox" ng-model="chat.autoScroll"> auto-scroll
             </label>
             <div id="error-msg" class="alert alert-danger" style="display:none" role="alert">Error Message</div>
             <div class="form-group">
                 <label for="user">Username</label>
-                <input id="user" class="form-control" maxlength="15" ng-model="chat.username">
+                <input id="user" class="form-control" maxlength="15"
+                 ng-disabled="chat.messagesSent"
+                 ng-model="chat.username">
             </div>
             <div class="form-group">
                 <label for="new-message">Message</label>

@@ -1,11 +1,18 @@
 angular.module('chatApp', ['ngResource'])
-    .controller('ChatController', function($resource){
+    .controller('ChatController', ['$resource', '$timeout', function($resource, $timeout){
         var Message = $resource('/messages/:msgId',
             { msgId:'0' }, {
                 getLast: {method: 'GET', isArray: true}
             });
 
+        var scrollToBottom = function(y) {
+          var room = document.getElementById('room');
+          room.scrollTop = y || (room.scrollHeight + 100);
+        }
+
         var chat = this;
+        chat.messagesSent = 0;
+        chat.autoScroll = true;
         chat.userId = new Date().getTime();
         chat.username = 'anonymous'
         chat.changeuserdisabled = '';
@@ -13,8 +20,8 @@ angular.module('chatApp', ['ngResource'])
         chat.msgs = [];
         chat.msgs = Message.query(function(){
             chat.lastId = _.max(_.pluck(chat.msgs, 'id'));
-            if ($('#auto-scroll').is(':checked')) {
-                $('#room').animate({scrollTop: chat.msgs.length * 60}, 1000);
+            if (chat.autoScroll) {
+                $timeout(scrollToBottom.bind(this, chat.msgs.length * 50));
             }
 
             setInterval(function() {
@@ -24,12 +31,12 @@ angular.module('chatApp', ['ngResource'])
                         _.forEach(ret, function(msg) {
                            chat.msgs.push(msg);
                         });
-                        if ($('#auto-scroll').is(':checked')) {
-                            $('#room').animate({scrollTop: chat.msgs.length * 60}, 1000);
+                        if (chat.autoScroll) {
+                            scrollToBottom();
                         }
                     }
                 });
-            }, 5000);
+            }, 3000);
         });
 
         chat.sendMsg = function() {
@@ -43,7 +50,7 @@ angular.module('chatApp', ['ngResource'])
                 message: chat.message });
             msg.$save();
 
-            $('#user').prop('disabled', true);
+            chat.messagesSent++;
             chat.message = ''
         };
-    });
+    }]);
