@@ -9,13 +9,22 @@ app.set('port', (process.env.PORT || 5000));
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var socket;
+
+io.on('connection', function(s) {
+  socket = s;
+  socket.on('move', function(pos) {
+    console.log(pos);
+    io.emit('changePos', pos);
+  });
+});
 
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/chat';
 
 app.post('/messages/:last_id?', function(request, response) {
   console.log('request sent ' + request.body.message);
   var msg = request.body;
-  
+
   console.log(msg);
   pg.connect(connectionString, function(err, client, done) {
       // Handle Errors
@@ -28,10 +37,11 @@ app.post('/messages/:last_id?', function(request, response) {
       // SQL Query > Insert Data
       var query = client.query('INSERT INTO messages(username, user_id, message, date) values($1, $2, $3, $4) RETURNING *', [msg.username, msg.user_id, msg.message, new Date().getTime()], function(err, result) {
         if (result && result.rows[0]) {
+          console.log(msg, 'vai emitir', result.rows[0]);
           io.emit('message', result.rows[0]);
         }
       });
-    
+
       query.on('end', function() {
         response.sendStatus(200);
         done();

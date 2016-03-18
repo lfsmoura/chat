@@ -1,0 +1,28 @@
+#game {
+  float: left;
+  margin: 10px;
+}
+
+#room {
+  height: 400px;
+  width: 400px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  overflow: auto;
+  background-color: #eee;
+}
+
+#input-box {
+  margin: 10px;
+}
+
+.footer {
+  margin-top: 20%;
+  border-top: 1px solid #ccc;
+}
+
+.user {
+  float:left;
+  width: 130px
+}
