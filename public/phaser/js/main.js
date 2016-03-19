@@ -9,14 +9,29 @@ Chat.prototype.preload = function() {
   this.load.spritesheet('charset', 'assets/charset.png', 24, 32);
 };
 
-Chat.prototype.createPlayer = function(x, y) {
+Chat.prototype.createPlayer = function(x, y, id) {
   var player = game.add.sprite(x, y, 'charset');
-  player.animations.add('up', [0, 1, 2, 1], 5, true);
-  player.animations.add('right', [12, 13, 14, 13], 5, true);
-  player.animations.add('down', [24, 25, 26, 25], 5, true);
-  player.animations.add('left', [36, 37, 38, 37], 5, true);
+  var offset = (id.charCodeAt(0) % 4) * 3;
+  player.animations.add('up', [offset + 1, offset + 2, offset + 1, offset], 5, true);
+  player.animations.add('right', [offset + 13, offset + 14, offset + 13, offset + 12], 5, true);
+  player.animations.add('down', [offset + 25, offset + 26, offset + 25, offset + 24], 5, true);
+  player.animations.add('left', [offset + 37, offset + 38, offset + 37, offset + 36], 5, true);
   player.animations.play('down');
   return player;
+};
+
+var direction = function(x0, y0, x1, y1) {
+  var angle = Phaser.Math.angleBetween(x0, y0, x1, y1);
+  var dir = angle + Math.PI/4;
+
+  if (Math.PI/4 < angle && angle < 3*Math.PI/4) {
+    return 'down'
+  } else if (-Math.PI/4 < angle && angle < Math.PI/4) {
+    return 'right'
+  } else if (-3*Math.PI/4 < angle && angle < -Math.PI/4) {
+    return 'up'
+  }
+  return 'left';
 };
 
 Chat.prototype.create = function() {
@@ -44,18 +59,25 @@ Chat.prototype.create = function() {
   this.player = this.players[socket.id] = game.add.group();
   this.player.x = 250;
   this.player.y = 350;
-  var char = this.createPlayer(0,0);
+  var char = this.createPlayer(0, 0, socket.id);
   this.player.add(char);
 
   socket.on('changePos', function(pos) {
-    console.log(pos);
-    if (!this.players[pos.user_id]) {
-      this.players[pos.user_id] = game.add.group();
-      this.players[pos.user_id].x = -100;
-      this.players[pos.user_id].y = 350;
-      this.players[pos.user_id].add(this.createPlayer(0,0));
+    var player = this.players[pos.user_id];
+    if (!player) {
+      player = game.add.group();
+      this.players[pos.user_id] = player;
+      player.x = -100;
+      player.y = 350;
+      player.add(this.createPlayer(0, 0, pos.user_id));
     }
-    this.add.tween(this.players[pos.user_id]).to({ x: pos.x, y: pos.y }, 2000, Phaser.Easing.Linear.None, true);
+    player.children[0].animations.play(direction(player.x, player.y, pos.x, pos.y));
+
+    var time = Phaser.Math.distance(player.x, player.y, pos.x, pos.y)*4;
+    this.add.tween(player).to({ x: pos.x, y: pos.y }, time, Phaser.Easing.Linear.None, true)
+      .onComplete.add(function() {
+        player.children[0].animations.stop(null,true);
+      });
   }.bind(this));
 }
 

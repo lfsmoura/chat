@@ -23,16 +23,18 @@
     <h1>Chat Super Cool</h1>
     <div id="game">
     </div>
+    <div class="hidden-xs hidden-sm">
     <div id="room">
         <div ng-repeat="msg in chat.msgs">
             <span class="user">{{msg.username}}:</span> {{msg.message}}
         </div>
-    </div>
-    <div id="input-box">
+    </div
+    <label>
+        <input type="checkbox" id="auto-scroll" checked="checked" ng-model="chat.autoScroll"> auto-scroll
+    </label>
+  </div>
+    <div id="input-box" style="clear: left">
         <form ng-submit="chat.sendMsg()">
-            <label>
-                <input type="checkbox" id="auto-scroll" checked="checked" ng-model="chat.autoScroll"> auto-scroll
-            </label>
             <div id="error-msg" class="alert alert-danger" style="display:none" role="alert">Error Message</div>
             <div class="form-group">
                 <label for="user">Username</label>
@@ -40,7 +42,7 @@
             </div>
             <div class="form-group">
                 <label for="new-message">Message</label>
-                <input id="new-message" placeholder="type your message and press enter" class="form-control" autofocus ng-model="chat.message">
+                <input id="new-message" placeholder="type your message and press enter" class="form-control" ng-model="chat.message">
             </div>
             <input class="btn-primary" type="submit" value="add" style="display: none">
         </form>
