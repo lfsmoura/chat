@@ -5,11 +5,18 @@ define(['lib/randomColor', 'chat', 'message', 'i18n!nls/main'],
 
         template: _.template($('#message-template').html()),
 
+        getUserColor: function(id) {
+          if (Number.isNaN(parseInt(id))) {
+            id = id.split('').reduce(function(s, a) { return s + a.charCodeAt(0); }, 0);
+          } else {
+            id = parseInt(id);
+          }
+          return randomColor({ seed: id, luminosity: 'bright' });
+        },
+
         render: function () {
-            var attr = { color: randomColor({
-              seed: parseInt(this.model.get('user_id')),
-              luminosity: 'bright'
-            }) };
+            var attr = { color: this.getUserColor(this.model.get('user_id')) };
+            
             this.$el.html(this.template(_.extend(attr ,this.model.attributes)));
             this.$el.fadeIn();
             return this;

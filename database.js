@@ -1,5 +1,5 @@
 var pg = require('pg');
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/chat';
+var connectionString = process.env.DATABASE_URL || require('./config').DatabaseUrl;
 
 var client = new pg.Client(connectionString);
 client.connect();
