@@ -5,7 +5,8 @@
   "version": "0.1.0",
   "main": "web.js",
   "scripts": {
-    "start": "node web.js"
+    "start": "node web.js",
+    "build": "cd src/flux/ && ls && bash build.sh"
   },
   "dependencies": {
     "application": "x",

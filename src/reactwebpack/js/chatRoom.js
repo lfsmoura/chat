@@ -1,11 +1,9 @@
 import React from 'react';
 import randomColor from './lib/randomColor.js'
 
-import { chatStore } from './chatStore.js';
-
 export default class ChatRoom extends React.Component {
   componentDidUpdate() {
-    if (chatStore.getState().autoScroll) {
+    if (this.props.autoScroll) {
       this.refs.elem.scrollTop = this.refs.elem.scrollHeight;
     }
   }
@@ -20,14 +18,14 @@ export default class ChatRoom extends React.Component {
   }
 
   render() {
-    var rows = chatStore.getState().messages.map((message) => {
-        let usernameStyle= {
-         color: this.getUserColor(message.user_id)
-        };
-        return (<div key={message.id}>
-          <span className="user" style={usernameStyle}>{message.username}:</span> {message.message}
-         </div>);
-      });
+    var rows = this.props.messages.map(function(message) {
+      var usernameStyle= {
+       color: this.getUserColor(message.user_id)
+      };
+      return (<div key={message.id}>
+        <span className="user" style={usernameStyle}>{message.username}:</span> {message.message}
+       </div>);
+      }.bind(this));
     return (<div className="room" ref="elem">{rows}</div>);
   }
 }

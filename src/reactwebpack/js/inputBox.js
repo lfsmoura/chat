@@ -1,13 +1,10 @@
 import React from 'react';
 
-import { chatStore } from './chatStore.js';
-
 export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = { username: 'Anonymous', message: '', autoScroll: 'checked', messagesSent: 0};
   }
-
   canChangeUsername() {
     return this.state.messagesSent === 0;
   }
@@ -19,9 +16,9 @@ export default class Chat extends React.Component {
   }
 
   handleAutoScroll(e) {
-    chatStore.dispatch({
-      type: "TOGGLE-AUTOSCROLL"
-    })
+    var autoScroll = this.state.autoScroll ? '' : 'checked';
+    this.setState({ autoScroll: autoScroll});
+    this.props.onAutoScrollChange(!!autoScroll);
   }
 
   handleSubmit(e) {
@@ -31,18 +28,10 @@ export default class Chat extends React.Component {
     if (!message || !username) {
       return;
     }
-    this.sendMessage({ username: username, message: message });
+    this.props.onMessageSubmit({ username: username, message: message });
     this.setState({ message: '', messagesSent: this.state.messagesSent + 1 });
   }
-
-  sendMessage(message) {
-    message.user_id = chatStore.getState().userId;
-    var req = new XMLHttpRequest();
-    req.open("POST", "/messages/0");
-    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    req.send(JSON.stringify(message));
-  }
-
+  
   changeContent(e){
    this.setState({inputContent: e.target.value})
  }
@@ -56,14 +45,14 @@ export default class Chat extends React.Component {
       display: 'none'
     };
 
-    return (<div className="input-box">
+    return (<div id="input-box">
       <form onSubmit={this.handleSubmit.bind(this)}>
         <label>
           <input
             type="checkbox"
             name="auto-scroll"
-            onChange={this.handleAutoScroll}
-            checked={chatStore.getState().autoScroll} /> auto-scroll
+            onChange={this.handleAutoScroll.bind(this)}
+            checked={this.state.autoScroll} /> auto-scroll
         </label>
         <div className="form-group">
           <label htmlFor="user">Username</label>
