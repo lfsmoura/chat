@@ -7,25 +7,21 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.setSocket(io);
 
-app.use(express.static(__dirname + '/public'));
 
+var path = require('path');
 var webpackDevMiddleware = require("webpack-dev-middleware");
 var webpack = require("webpack");
 
 var compiler = webpack({
-    output: { path: '/' }
-});
-
-app.use(webpackDevMiddleware(compiler, {
-  entry: './public/flux/js/main.js',
+  entry: path.join(__dirname, 'src/flux/js/main.js'),
   output: {
-    path: './public/flux/',
+    path: path.join(__dirname, 'public/flux/'),
     filename: 'index.js'
   },
   module: {
     loaders: [
       {
-        test: /\.src\/flux\/js\/*.js$/,
+        test: /\.js$/,
         loader: 'babel',
         query: {
           presets: ['es2015', 'react']
@@ -33,7 +29,13 @@ app.use(webpackDevMiddleware(compiler, {
       }
     ]
   }
+});
+
+app.use(webpackDevMiddleware(compiler, {
+  publicPath: '/flux/'
 }));
+
+app.use(express.static(__dirname + '/public'));
 
 http.listen(app.get('port'), function() {
     console.log("Node app is running at localhost:" + app.get('port'));
